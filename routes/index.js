@@ -1,6 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const statsController = require('../controllers/stats.js');
+const leaguesController = require('../controllers/leagues.js');
+const draftController = require('../controllers/draft.js');
+const playerController = require('../controllers/players.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,5 +11,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/api/stats', statsController.getStats);
+router.get('/api/players', playerController.getPlayers);
+router.get('/api/leagues', leaguesController.getLeagues);
+router.post('/api/draftResults', draftController.storeResults);
 
 module.exports = router;

@@ -1,42 +1,89 @@
-const db = require('../databaseConnection.js')
+const db = require('../databaseConnection.js');
 
-// const query = 'SELECT * FROM nhl.players WHERE playerid < $1;';
-const query = `SELECT np.lastname, np.firstname, ncs.points, nt.logo
-FROM nhl.cumstats ncs
-LEFT JOIN nhl.players np
-  ON ncs.playerid = np.playerid
-LEFT JOIN nhl.seasons ns
-  ON ncs.seasonid = ns.seasonid
-LEFT JOIN nhl.gametypes ng
-  ON ncs.gametypeid = ng.gametypeid
-LEFT JOIN nhl.teams nt
-  ON np.teamid = nt.teamid
-WHERE
-  lower(ng.gametype) = 'playoffs'
-  AND ns.endyear = 2020
-ORDER BY ncs.points DESC;`
+const {getStatsQuery} = require("./queries/statsQueries.js")
 
 exports.getStats = function(req, res, next) {
-  db.any(query, 30)
+  db.any(getStatsQuery, [2021, 'Rose City'])
       .then(function(data) {
-        console.log(typeof data);
-        console.log('Got data.')
+        // console.log(typeof data);
+        console.log('Got data.');
+        // console.log(data);
+
+        // Data example:
+        // [
+        //   {
+        //     teamname: 'testTeam',
+        //     lastname: 'CROSBY',
+        //     firstname: 'SIDNEY',
+        //     points: 56,
+        //     logo: 'pittsburgh.svg',
+        //     round: 1,
+        //     pick: 1
+        //   },
+        //   {
+        //     teamname: 'testTeam',
+        //     lastname: 'MCDAVID',
+        //     firstname: 'CONNOR',
+        //     points: 84,
+        //     logo: 'edmonton.svg',
+        //     round: 2,
+        //     pick: 1
+        //   }
+        // ]
+
+        // Get all returned team names
+        const teams = data.map( ({teamname}) => teamname );
+        // Get unique team names
+        const uniqueTeams = teams.filter( (team, index, teams) => {
+          return teams.indexOf(team) === index;
+        });
+
+        // Data to be sent to front end
+        const outData = [];
+        // Format:
+        // [
+        //   {
+        //     name: teamname
+        //     stats: [{
+        //       lastname:  lastname,
+        //       firstname: firstname,
+        //       points:    points,
+        //       logo:      logo,
+        //     },
+        //     {
+        //       lastname:  lastname,
+        //       firstname: firstname,
+        //       points:    points,
+        //       logo:      logo,
+        //     }]
+        //   },
+        // ]
+
+        // Pull stats for each team into one array
+        uniqueTeams.forEach( teamName => {
+
+          // Get picks corresponding to the current team name
+          const teamPicks = data.filter( pick => {
+            return pick.teamname === teamName;
+          });
+
+          // Pull out only the relevant data per team
+          const stats = teamPicks.map( ({lastname, firstname, points, logo}) => {
+            return {lastname, firstname, points, logo};
+          });
+
+          outData.push({
+            name: teamName,
+            stats,
+          })
+
+        });
+
         // res.send(data);
-        res.json(data);
+        res.json(outData);
       })
       .catch(function(error) {
-          // TODO add error handling
-          console.log('Did not get data.')
+        // TODO add error handling
+        console.log('Did not get data.', error)
       });
 };
-
-// const getStats = async () => {
-//   try {
-//     const players = await db.any(query, 30);
-//     console.log('Got players.')
-//     return players;
-//   }
-//   catch(e) {
-//     // error
-//   }
-// };
