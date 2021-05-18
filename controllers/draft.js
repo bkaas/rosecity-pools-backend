@@ -66,7 +66,7 @@ exports.storeResults = async function(req, res, next) {
     for ( const team of uniqueTeams ) {
     // uniqueTeams.forEach( team => {
       // Check team exists
-      const teamResult = await t.oneOrNone(checkTeamExists, [team]);
+      const teamResult = await t.oneOrNone(checkTeamExists, [team, year, league]);
       // Create the team if it doesn't exist
       if (!teamResult) {
         await t.none(createTeam, [team, year, league]);

@@ -7,8 +7,14 @@ exports.checkLeagueExists =
 
 exports.checkTeamExists =
   `SELECT *
-  FROM rosecity.teams
-  WHERE name = $1`;
+  FROM rosecity.teams rt
+  LEFT JOIN nhl.seasons ns
+    ON ns.seasonid = rt.seasonid
+  LEFT JOIN rosecity.leagues rl
+    ON rl.leagueid = rt.leagueid
+  WHERE rt.name = $1
+    AND ns.endyear = $2
+    AND rl.name = $3`;
 
 // Check if the league has already drafted this
 exports.checkDraftedQuery =

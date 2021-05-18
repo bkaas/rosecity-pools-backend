@@ -3,7 +3,7 @@ const db = require('../databaseConnection.js');
 const {getStatsQuery} = require("./queries/statsQueries.js")
 
 exports.getStats = function(req, res, next) {
-  db.any(getStatsQuery, [2021, 'Rose City'])
+  db.any(getStatsQuery, [2021, 'Rose City', 'playoffs'])
       .then(function(data) {
         // console.log(typeof data);
         console.log('Got data.');
