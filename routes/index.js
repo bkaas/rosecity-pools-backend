@@ -13,6 +13,8 @@ router.get('/', function(req, res, next) {
 router.get('/api/stats', statsController.getStats);
 router.get('/api/players', playerController.getPlayers);
 router.get('/api/leagues', leaguesController.getLeagues);
-router.post('/api/draftResults', draftController.storeResults);
+// Disable the draft submission since the site wasn't ready for the draft
+// Don't want users to accidentally submit new draft data
+// router.post('/api/draftResults', draftController.storeResults);
 
 module.exports = router;
