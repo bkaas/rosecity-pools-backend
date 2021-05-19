@@ -53,7 +53,10 @@ exports.insertStatsQuery =
   FROM tmpstats ts
   INNER JOIN nhl.players np
     ON LOWER(CONCAT(np.firstname, ' ', np.lastname)) = LOWER(ts.name)
-    AND np.position = ts.pos
+    AND
+      CASE WHEN np.position IN ('LW', 'RW', 'C') THEN 'F' ELSE np.position END
+      =
+      CASE WHEN ts.pos IN ('LW', 'RW', 'C') THEN 'F' ELSE ts.pos END
   LEFT JOIN nhl.teams nt
     ON nt.abbr = ts.abbr
   ON CONFLICT DO NOTHING;`;
