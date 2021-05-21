@@ -49,12 +49,14 @@ exports.getStats = function(req, res, next) {
         //       firstname: firstname,
         //       points:    points,
         //       logo:      logo,
+        //       pick:      pick,
         //     },
         //     {
         //       lastname:  lastname,
         //       firstname: firstname,
         //       points:    points,
         //       logo:      logo,
+        //       pick:      pick,
         //     }]
         //   },
         // ]
@@ -68,8 +70,8 @@ exports.getStats = function(req, res, next) {
           });
 
           // Pull out only the relevant data per team
-          const stats = teamPicks.map( ({lastname, firstname, points, logo}) => {
-            return {lastname, firstname, points, logo};
+          const stats = teamPicks.map( ({lastname, firstname, points, logo, pick}) => {
+            return {lastname, firstname, points, logo, pick};
           });
 
           outData.push({
