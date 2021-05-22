@@ -50,15 +50,25 @@ exports.insertStatsQuery =
     ts.pts::INTEGER,
     nt.teamid,
     ts.gp::INTEGER
-  FROM tmpstats ts
-  INNER JOIN nhl.players np
-    ON LOWER(CONCAT(np.firstname, ' ', np.lastname)) = LOWER(ts.name)
+  FROM nhl.players np
+  LEFT JOIN nhl.nicknames nn
+    ON LOWER(np.firstname) = LOWER(nn.name)
+    OR LOWER(np.firstname) = LOWER(nn.nickname)
+  LEFT JOIN tmpstats ts
+    ON (
+      REPLACE(LOWER(CONCAT(np.firstname, ' ', np.lastname)), '.', '') = REPLACE(LOWER(ts.name), '.', '')
+      OR
+      REPLACE(LOWER(CONCAT(nn.name, ' ', np.lastname)), '.', '') = REPLACE(LOWER(ts.name), '.', '')
+      OR
+      REPLACE(LOWER(CONCAT(nn.nickname, ' ', np.lastname)), '.', '') = REPLACE(LOWER(ts.name), '.', '')
+    )
     AND
       CASE WHEN np.position IN ('LW', 'RW', 'C') THEN 'F' ELSE np.position END
       =
       CASE WHEN ts.pos IN ('LW', 'RW', 'C') THEN 'F' ELSE ts.pos END
   LEFT JOIN nhl.teams nt
     ON nt.abbr = ts.abbr
+  WHERE ts.pts IS NOT NULL
   ON CONFLICT DO NOTHING;`;
 
 // TODO merge common parts of the below two queries
