@@ -3,7 +3,6 @@
 const fetch  = require("node-fetch");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-const db = require("../databaseConnection.js");
 
 const {updateDatabaseWithStats} = require("./insertStats.js");
 
