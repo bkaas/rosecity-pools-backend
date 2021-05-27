@@ -19,6 +19,7 @@ exports.getStats = function(req, res, next) {
         //     logo: 'pittsburgh.svg',
         //     round: 1,
         //     pick: 1
+        //     eliminated: true
         //   },
         //   {
         //     teamname: 'testTeam',
@@ -28,6 +29,7 @@ exports.getStats = function(req, res, next) {
         //     logo: 'edmonton.svg',
         //     round: 2,
         //     pick: 1
+        //     eliminated: false
         //   }
         // ]
 
@@ -45,18 +47,20 @@ exports.getStats = function(req, res, next) {
         //   {
         //     name: teamname
         //     stats: [{
-        //       lastname:  lastname,
-        //       firstname: firstname,
-        //       points:    points,
-        //       logo:      logo,
-        //       pick:      pick,
+        //       lastname:    lastname,
+        //       firstname:   firstname,
+        //       points:      points,
+        //       logo:        logo,
+        //       pick:        pick,
+        //       eliminated: eliminated,
         //     },
         //     {
-        //       lastname:  lastname,
-        //       firstname: firstname,
-        //       points:    points,
-        //       logo:      logo,
-        //       pick:      pick,
+        //       lastname:    lastname,
+        //       firstname:   firstname,
+        //       points:      points,
+        //       logo:        logo,
+        //       pick:        pick,
+        //       eliminated: eliminated,
         //     }]
         //   },
         // ]
@@ -70,8 +74,8 @@ exports.getStats = function(req, res, next) {
           });
 
           // Pull out only the relevant data per team
-          const stats = teamPicks.map( ({lastname, firstname, points, logo, pick}) => {
-            return {lastname, firstname, points, logo, pick};
+          const stats = teamPicks.map( ({lastname, firstname, points, logo, pick, eliminated}) => {
+            return {lastname, firstname, points, logo, pick, eliminated};
           });
 
           outData.push({

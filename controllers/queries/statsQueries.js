@@ -6,7 +6,8 @@ exports.getStatsQuery =
     ncs.points,
     nt.logo,
     rr.round,
-    rr.pick
+    rr.pick,
+    nps.eliminated
   FROM rosecity.rosters rr
   LEFT JOIN rosecity.teams rt
     ON rt.teamid = rr.teamid
@@ -23,6 +24,9 @@ exports.getStatsQuery =
     ON ncs.gametypeid = ng.gametypeid
   LEFT JOIN nhl.teams nt
     ON ncs.teamid = nt.teamid
+  LEFT JOIN nhl.playoffstatus nps
+    ON nt.teamid = nps.teamid
+    AND ns.seasonid = nps.seasonid
   WHERE ns.endyear = $1
     AND rl.name = $2
     AND ng.gametype = $3

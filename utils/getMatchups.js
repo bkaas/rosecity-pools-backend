@@ -12,7 +12,7 @@ const THESCORE_URL = 'https://www.thescore.com/nhl/standings/playoffs';
 
 const updateContendersQuery =
   `UPDATE nhl.playoffstatus
-    SET iscompeting = false
+    SET eliminated = true
     WHERE teamid IN (
       SELECT nps.teamid
         FROM nhl.playoffstatus nps
@@ -27,7 +27,6 @@ const updateContendersQuery =
   const text = await res.text();
   const dom = await new JSDOM(text);
   const document = dom.window.document;
-  console.log(document);
 
   const matchupNodes = document.querySelectorAll('.CardHeader__header--11_m6');
 
