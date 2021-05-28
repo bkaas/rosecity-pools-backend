@@ -43,17 +43,14 @@ exports.getGametype =
   WHERE gametype = $1;`
 
 
-// TODO merge common parts of the below two queries
-exports.insertStatsQuery =
-  `INSERT INTO nhl.cumstats
-    (playerid, seasonid, gametypeid, points, teamid, gp)
-  SELECT
-    np.playerid,
-    $1,
-    $2,
-    ts.pts::INTEGER,
-    nt.teamid,
-    ts.gp::INTEGER
+const selectNewStats =
+  `SELECT
+    np.playerid playerid,
+    $(seasonid) seasonid,
+    $(gametypeid) gametypeid,
+    ts.pts::INTEGER pts,
+    nt.teamid teamid,
+    ts.gp::INTEGER gp
   FROM nhl.players np
   LEFT JOIN nhl.nicknames nn
     ON LOWER(np.firstname) = LOWER(nn.name)
@@ -72,31 +69,18 @@ exports.insertStatsQuery =
       CASE WHEN ts.pos IN ('LW', 'RW', 'C') THEN 'F' ELSE ts.pos END
   LEFT JOIN nhl.teams nt
     ON nt.abbr = ts.abbr
-  WHERE ts.pts IS NOT NULL
+  WHERE ts.pts IS NOT NULL`;
+
+exports.insertStatsQuery =
+  `INSERT INTO nhl.cumstats
+    (playerid, seasonid, gametypeid, points, teamid, gp)
+  ${selectNewStats}
   ON CONFLICT DO NOTHING;`;
 
-// TODO merge common parts of the below two queries
 exports.updateStatsQuery =
   `UPDATE nhl.cumstats ncs
   SET points = myq.pts, gp = myq.gp
-  FROM (
-    SELECT
-      np.playerid playerid,
-      $1 seasonid,
-      $2 gametypeid,
-      ts.pts::INTEGER pts,
-      nt.teamid teamid,
-      ts.gp::INTEGER gp
-    FROM tmpstats ts
-    INNER JOIN nhl.players np
-      ON LOWER(CONCAT(np.firstname, ' ', np.lastname)) = LOWER(ts.name)
-      AND
-      CASE WHEN np.position IN ('LW', 'RW', 'C') THEN 'F' ELSE np.position END
-      =
-      CASE WHEN ts.pos IN ('LW', 'RW', 'C') THEN 'F' ELSE ts.pos END
-    LEFT JOIN nhl.teams nt
-      ON nt.abbr = ts.abbr
-  ) AS myq
+  FROM (${selectNewStats}) AS myq
   WHERE myq.playerid = ncs.playerid
     AND myq.seasonid = ncs.seasonid
     AND myq.gametypeid = ncs.gametypeid

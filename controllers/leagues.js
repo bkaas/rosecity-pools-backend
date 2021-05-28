@@ -4,7 +4,7 @@ const query = `
   SELECT * FROM rosecity.leagues;`;
 
 exports.getLeagues = function(req, res, next) {
-  db.any(query, 30) // TODO why 30
+  db.any(query)
     .then( data => {
       console.log('Got data');
       console.log(data);

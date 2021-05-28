@@ -69,11 +69,11 @@ exports.updateDatabaseWithStats = (stats) => {
 
     // Insert data to nhl.cumstats
     // Inserts data for players that don't yet have data
-    const submitResult = await t.any(insertStatsQuery, [seasonid, gametypeid]);
+    const submitResult = await t.any(insertStatsQuery, {seasonid, gametypeid});
     console.log(submitResult);
 
     // Update existing player's data
-    const updateResult = await t.any(updateStatsQuery, [seasonid, gametypeid]);
+    const updateResult = await t.any(updateStatsQuery, {seasonid, gametypeid});
     console.log(updateResult);
   })
     .then(() => {
