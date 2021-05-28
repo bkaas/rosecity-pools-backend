@@ -1,5 +1,3 @@
-// players.js
-
 const db = require('../databaseConnection.js');
 
 const query = `
@@ -11,6 +9,8 @@ LEFT JOIN nhl.teams nt
   ON ncs.teamid = nt.teamid
 ORDER BY np.lastname ASC;`;
 
+
+// Retrieve a list of players and their logos from the database.
 exports.getPlayers = function(req, res, next) {
   db.any(query, 30)
       .then(data => {

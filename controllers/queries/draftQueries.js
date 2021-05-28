@@ -16,7 +16,7 @@ exports.checkTeamExists =
     AND ns.endyear = $2
     AND rl.name = $3`;
 
-// Check if the league has already drafted this
+// Check if the league has already drafted for a given year
 exports.checkDraftedQuery =
   `SELECT *
   FROM rosecity.rosters rcr

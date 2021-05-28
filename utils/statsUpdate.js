@@ -1,4 +1,13 @@
-// Utility script to update the database stats
+/*
+* Utility script that scrapes player stats from an external website,
+* formats the stats, then calls updateDatabaseWithStats() to update
+* the database.
+*
+* In order to run standalone (ie. not with npm run script), you
+* will need to include the environment variables file for the
+* database credentials. Something like:
+* node -r <pathToDotenvPackage>/config <pathToScript> dotenv_config_path=<pathToEnvFile>
+*/
 
 const fetch  = require("node-fetch");
 const jsdom = require("jsdom");
@@ -6,8 +15,6 @@ const { JSDOM } = jsdom;
 
 const {updateDatabaseWithStats} = require("./insertStats.js");
 
-let document;
-let currPageStats;
 // fantrax always shows the last page of stats
 // regardless how large the page number is in the URL
 const allPageStats = [];
@@ -24,12 +31,12 @@ let lastPage = false;
     const res = await fetch(FANTRAX_URL);
     const text = await res.text();
     const dom = await new JSDOM(text);
-    document = dom.window.document;
+    const document = dom.window.document;
 
     // Loop over each row of the stats table
     const statRows = document.querySelectorAll("table.sportsTable tr");
 
-    currPageStats = Array.from(statRows, (row) => {
+    const currPageStats = Array.from(statRows, (row) => {
 
       const nameHtml = ((row || {}).childNodes[3] || {}).innerHTML;
 

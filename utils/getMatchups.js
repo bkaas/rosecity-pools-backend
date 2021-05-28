@@ -1,12 +1,24 @@
-// Get matchups from nhl.com
+/*
+* Utility script to:
+*   - grab the playoff series score from a website
+*   - check for teams that have been eliminated
+*   - update the database playoffstatus table with eliminated teams
+*
+* The purpose of updating eliminated teams is to allow the frontend to strike
+* out eliminated players.
+* This script is intended to be run on the server on a schedule to periodically
+* update the database.
+*
+* In order to run standalone (ie. not with npm run script), you
+* will need to include the environment variables file for the
+* database credentials. Something like:
+* node -r <pathToDotenvPackage>/config <pathToScript> dotenv_config_path=<pathToEnvFile>
+*/
 
 const fetch = require('node-fetch');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const db = require("../databaseConnection.js");
-
-// Run file:
-// node -r C:\Users\bkaas\AppData\Roaming\npm\node_modules\dotenv\config .\getMatchups.js dotenv_config_path=C:\Users\bkaas\Documents\Projects\rose-city-playoff-pool\rose-city-playoff-pool\api\rose-city-pp-api\.env
 
 const THESCORE_URL = 'https://www.thescore.com/nhl/standings/playoffs';
 
