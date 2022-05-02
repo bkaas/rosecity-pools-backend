@@ -69,7 +69,8 @@ const selectNewStats =
       CASE WHEN ts.pos IN ('LW', 'RW', 'C') THEN 'F' ELSE ts.pos END
   LEFT JOIN nhl.teams nt
     ON nt.abbr = ts.abbr
-  WHERE ts.pts IS NOT NULL`;
+  WHERE ts.pts IS NOT NULL
+    AND nt.teamid IS NOT NULL`;
 
 exports.insertStatsQuery =
   `INSERT INTO nhl.cumstats
