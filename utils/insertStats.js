@@ -1,4 +1,10 @@
-// Insert stats to the database
+/*
+* Utility script to update the database with stats scraped from a website
+* Creates a constraint free table to dump the raw data (or clears the already
+* existing table for dumping the new raw data).
+* Tries to insert the data into the cumulative stats table. If the entries
+* already exist, update the existing entries with the new stats.
+*/
 
 const pgp = require('pg-promise')();
 const db = require("../databaseConnection.js");
@@ -14,10 +20,10 @@ const tableName = 'tmpstats';
 const gametype = "playoffs";
 const year = new Date().getFullYear();
 
-// Test stats table
-// TODO don't hardcode the table name
+// Temporary stats dump table. Didn't use an actual Postgres temporary table
+// in order to aid debugging. Temporary tables only exist in the current session.
 const makeTable =
-  `CREATE TABLE tmpstats (
+  `CREATE TABLE ${tableName} (
     name varchar(255),
     abbr varchar(255),
     pos varchar(255),
@@ -25,11 +31,10 @@ const makeTable =
     pts varchar(255)
   );`;
 
-// TODO don't hardcode the table name
 const tableExists =
   `SELECT EXISTS (
      SELECT FROM information_schema.tables
-     WHERE  table_name   = 'tmpstats'
+     WHERE  table_name   = $(tableName)
    );`
 
 const cs = new pgp.helpers.ColumnSet([
@@ -54,7 +59,7 @@ exports.updateDatabaseWithStats = (stats) => {
     // console.log(seasonid);
     // console.log(gametypeid);
 
-    const {exists} = await t.one(tableExists);
+    const {exists} = await t.one(tableExists, {tableName});
 
     if (exists) {
       await t.none(`TRUNCATE tmpstats`);

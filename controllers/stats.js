@@ -2,8 +2,12 @@ const db = require('../databaseConnection.js');
 
 const {getStatsQuery} = require("./queries/statsQueries.js")
 
+/*
+* Retrieve player stats from the database for each fantasy team
+* Format the data appriopriately.
+*/
 exports.getStats = function(req, res, next) {
-  db.any(getStatsQuery, [2021, 'Rose City', 'playoffs'])
+  db.any(getStatsQuery, [2021, 'Rose City', 'playoffs']) // TODO don't hardcode these selections
       .then(function(data) {
         // console.log(typeof data);
         console.log('Got data.');

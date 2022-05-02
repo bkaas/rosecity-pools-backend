@@ -1,3 +1,4 @@
+// Main query for accessing player stats
 exports.getStatsQuery =
   `SELECT
     rt.name AS teamname,
@@ -42,7 +43,8 @@ exports.getGametype =
   FROM nhl.gametypes
   WHERE gametype = $1;`
 
-
+// Query to align raw stats scraped from an external website
+// to the nhl.players table
 const selectNewStats =
   `SELECT
     np.playerid playerid,
@@ -72,12 +74,14 @@ const selectNewStats =
   WHERE ts.pts IS NOT NULL
     AND nt.teamid IS NOT NULL`;
 
+// For stats that don't already exist in nhl.cumstats, insert new ones
 exports.insertStatsQuery =
   `INSERT INTO nhl.cumstats
     (playerid, seasonid, gametypeid, points, teamid, gp)
   ${selectNewStats}
   ON CONFLICT DO NOTHING;`;
 
+// For stats that already exist in nhl.cumstats, update their values
 exports.updateStatsQuery =
   `UPDATE nhl.cumstats ncs
   SET points = myq.pts, gp = myq.gp

@@ -1,5 +1,3 @@
-// players.js
-
 const db = require('../databaseConnection.js');
 
 const currentYear = new Date().getFullYear();
@@ -16,6 +14,8 @@ LEFT JOIN nhl.seasons ns
 WHERE ns.endyear = ${currentYear}
 ORDER BY np.lastname ASC;`;
 
+
+// Retrieve a list of players and their logos from the database.
 exports.getPlayers = function(req, res, next) {
   db.any(query, 30)
       .then(data => {

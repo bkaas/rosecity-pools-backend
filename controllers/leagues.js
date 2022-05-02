@@ -3,6 +3,7 @@ const db = require('../databaseConnection.js');
 const query = `
   SELECT * FROM rosecity.leagues;`;
 
+// Retrieve a list of leagues stored in the database
 exports.getLeagues = function(req, res, next) {
   db.any(query)
     .then( data => {
