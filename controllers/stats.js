@@ -7,7 +7,7 @@ const {getStatsQuery} = require("./queries/statsQueries.js")
 * Format the data appriopriately.
 */
 exports.getStats = function(req, res, next) {
-  db.any(getStatsQuery, [2021, 'Rose City', 'playoffs']) // TODO don't hardcode these selections
+  db.any(getStatsQuery, [2022, 'Rose City', 'playoffs']) // TODO don't hardcode these selections
       .then(function(data) {
         // console.log(typeof data);
         console.log('Got data.');

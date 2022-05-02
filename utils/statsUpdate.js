@@ -27,7 +27,7 @@ let lastPage = false;
   while (!lastPage) {
     pageNo += 1;
 
-    const FANTRAX_URL = `https://www.fantrax.com/newui/NHL/statsPlayers.go?isSubmit=y&sId=&sortOrder=SCORING_CATEGORY&sortScId=2190&prevPageNumber=1&pageNumber=${pageNo}&season=31c&confDivOrTeamId=0&maxResultsPerPage=50&scKind=SKATING_STANDARD&position=-2`;
+    const FANTRAX_URL = `https://www.fantrax.com/newui/NHL/statsPlayers.go?isSubmit=y&sId=&sortOrder=SCORING_CATEGORY&sortScId=2190&prevPageNumber=1&pageNumber=${pageNo}&season=31e&confDivOrTeamId=0&maxResultsPerPage=50&scKind=SKATING_STANDARD&position=-2`;
     const res = await fetch(FANTRAX_URL);
     const text = await res.text();
     const dom = await new JSDOM(text);

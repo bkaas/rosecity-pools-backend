@@ -69,8 +69,13 @@ const selectNewStats =
       CASE WHEN np.position IN ('LW', 'RW', 'C') THEN 'F' ELSE np.position END
       =
       CASE WHEN ts.pos IN ('LW', 'RW', 'C') THEN 'F' ELSE ts.pos END
+  LEFT JOIN nhl.altteamabbr ata
+    ON ts.abbr = ata.abbr1
+    OR ts.abbr = ata.abbr2
   LEFT JOIN nhl.teams nt
     ON nt.abbr = ts.abbr
+    OR nt.abbr = ata.abbr1
+    OR nt.abbr = ata.abbr2
   WHERE ts.pts IS NOT NULL
     AND nt.teamid IS NOT NULL`;
 
