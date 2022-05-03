@@ -1,0 +1,7 @@
+Put a text command in testCron.txt and wrote it to the crontab file. "crontab -" grabs the information from stdin and adds it to the crontab file.
+
+Command used: 
+  cat updateCron.txt | crontab -
+
+Check cron list
+  crontab -l
