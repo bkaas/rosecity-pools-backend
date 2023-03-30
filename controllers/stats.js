@@ -7,7 +7,9 @@ const {getStatsQuery} = require("./queries/statsQueries.js")
 * Format the data appriopriately.
 */
 exports.getStats = function(req, res, next) {
-  db.any(getStatsQuery, [2022, 'Rose City', 'playoffs']) // TODO don't hardcode these selections
+  // In case the url query doesn't have a year, use the current one
+  const year = +req.query.year || new Date().getFullYear();
+  db.any(getStatsQuery, [year, 'Rose City', 'playoffs']) // TODO don't hardcode these selections
       .then(function(data) {
         // console.log(typeof data);
         console.log('Got data.');
