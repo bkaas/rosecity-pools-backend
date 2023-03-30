@@ -5,3 +5,6 @@ Command used:
 
 Check cron list
   crontab -l
+
+Remove all cron jobs
+  crontab -r
